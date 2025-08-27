@@ -1,9 +1,12 @@
 import dbConnect from "@/lib/dbConnect";
 import Article from "@/models/Article";
 import "@/models/index";
-import React from "react";
+import React, { Suspense } from "react";
 import Image from "next/image";
 import Markdown from "react-markdown";
+import ArticleAuthorSection from "@/components/articleReadComponents/ArticleAuthorSection";
+import ArticleCommentsSections from "@/components/articleReadComponents/ArticleCommentsSections";
+import RecentArticlesSection from "@/components/articleReadComponents/RecentArticlesSection";
 
 // interface Articles {
 //   _id: string;
@@ -94,8 +97,13 @@ export default async function page({
           </div>
 
           {/* Need here the article author section => Client component cause we need click */}
+          <ArticleAuthorSection />
           {/* Comments also as well need to be in the client */}
+          <ArticleCommentsSections />
           {/* Recent articles section to be handled in the server side as well */}
+          <Suspense fallback={<p>Loading Recent Articles...</p>}>
+            <RecentArticlesSection />
+          </Suspense>
         </div>
       )}
     </div>
