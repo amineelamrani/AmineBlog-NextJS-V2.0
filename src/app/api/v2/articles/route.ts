@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
 
   return Response.json(
     {
-      message: "success",
+      status: "success",
       result: { queryArticles },
     },
     { status: 202 }
