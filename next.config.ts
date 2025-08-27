@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
       new URL(
         "http://res.cloudinary.com/dntdxqzsw/image/upload/v1741683505/blog/ProfilePictures/**"
       ),
+      new URL(
+        "http://res.cloudinary.com/dntdxqzsw/image/upload/w_1000/q_35/f_auto/**"
+      ),
     ],
   },
 };
