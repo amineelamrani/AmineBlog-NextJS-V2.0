@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ThemeSwitch from "./ThemeSwitch";
@@ -10,6 +10,10 @@ export default function Header() {
   const handleThemeSwap = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTheme(e.target.checked ? "dark" : "light");
   };
+
+  useEffect(() => {
+    localStorage.setItem("BlogTheme", theme);
+  }, [theme]);
 
   return (
     <div className="flex justify-between items-center py-3 w-full">

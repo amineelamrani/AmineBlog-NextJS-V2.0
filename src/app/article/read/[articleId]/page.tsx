@@ -97,9 +97,15 @@ export default async function page({
           </div>
 
           {/* Need here the article author section => Client component cause we need click */}
-          <ArticleAuthorSection />
+          <ArticleAuthorSection
+            articleId={articleId}
+            author={articleData.author}
+          />
           {/* Comments also as well need to be in the client */}
-          <ArticleCommentsSections />
+          <Suspense fallback={<p>Loading Comments Section ...</p>}>
+            <ArticleCommentsSections articleId={articleId} />
+          </Suspense>
+
           {/* Recent articles section to be handled in the server side as well */}
           <Suspense fallback={<p>Loading Recent Articles...</p>}>
             <RecentArticlesSection />

@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
       new URL(
         "http://res.cloudinary.com/dntdxqzsw/image/upload/w_1000/q_35/f_auto/**"
       ),
+      new URL("http://res.cloudinary.com/dntdxqzsw/image/upload/**"),
+      new URL("https://img.icons8.com"),
     ],
   },
 };
