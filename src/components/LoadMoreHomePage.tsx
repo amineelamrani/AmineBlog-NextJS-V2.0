@@ -35,7 +35,6 @@ export default function LoadMoreHomePage() {
         },
       });
       const data = await res.json();
-      console.log(data);
 
       if (data && data.status === "success") {
         if (data.result.queryArticles.length < 6) {
