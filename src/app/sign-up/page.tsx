@@ -1,20 +1,12 @@
-"use client";
+import OAuth from "@/components/OAuth";
 import Link from "next/link";
 import React from "react";
+import { handleSignUpSubmit } from "../actions";
 
-export default function page() {
+export default function Page() {
   // For Form management I would use the server actions as in the Forms guide
-  const handleSubmit = async (formData: FormData) => {
-    const rawFormData = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      password: formData.get("password"),
-      confirmPassword: formData.get("confirmPassword"),
-    };
+  const signUpSubmit = handleSignUpSubmit.bind(null);
 
-    // do the same logic as we have in handleSubmit MERN project
-    console.log("form submitted with Form data : ", rawFormData);
-  };
   return (
     <div className="flex flex-col py-14 items-center gap-5 w-full md:min-w-96 mx-auto md:w-fit">
       <div className="flex flex-col items-center gap-3 p-10 border border-neutral">
@@ -24,8 +16,8 @@ export default function page() {
           <br />
           Eleva
         </p>
-        <form className="w-full flex flex-col gap-3" action={handleSubmit}>
-          <label className="input input-bordered flex items-center gap-2">
+        <form className="w-full flex flex-col gap-3" action={signUpSubmit}>
+          <label className="input input-bordered flex items-center gap-2 w-full">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
@@ -42,7 +34,7 @@ export default function page() {
               required
             />
           </label>
-          <label className="input input-bordered flex items-center gap-2">
+          <label className="input input-bordered flex items-center gap-2 w-full">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
@@ -61,7 +53,7 @@ export default function page() {
             />
           </label>
 
-          <label className="input input-bordered flex items-center gap-2">
+          <label className="input input-bordered flex items-center gap-2 w-full">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
@@ -82,7 +74,7 @@ export default function page() {
               required
             />
           </label>
-          <label className="input input-bordered flex items-center gap-2">
+          <label className="input input-bordered flex items-center gap-2 w-full">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
@@ -107,6 +99,8 @@ export default function page() {
             Create Accoung
           </button>
         </form>
+
+        <OAuth />
 
         <div
           id="or-holder"
