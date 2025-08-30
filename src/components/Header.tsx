@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import ThemeSwitch from "./ThemeSwitch";
 import HomeIcon from "./HomeIcon";
+import SignInSectionHeader from "./SignInSectionHeader";
 
 export default function Header() {
   return (
@@ -24,16 +25,8 @@ export default function Header() {
 
       <div className="flex gap-2 items-center">
         <ThemeSwitch />
-        <Link href="/sign-in">
-          <button className="btn btn-sm px-5 text-xs md:text-base">
-            Log in
-          </button>
-        </Link>
-        <Link href="/sign-up">
-          <button className="btn btn-sm px-5 btn-primary text-xs md:text-base hidden sm:flex">
-            Sign up
-          </button>
-        </Link>
+        <SignInSectionHeader />
+
         <div className="dropdown dropdown-bottom dropdown-end md:hidden">
           <div tabIndex={0}>
             <svg

@@ -5,6 +5,7 @@ import Link from "next/link";
 import React, { useActionState, useState } from "react";
 import { handleSignInSubmit, SignInInterface } from "../actions";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/UserContext";
 
 interface User {
   email: string;
@@ -22,9 +23,10 @@ const initialSignInState: SignInInterface = {
 
 export default function Page() {
   //Manage global states only currentUser & theme ()
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  // const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [theme, setTheme] = useState("black"); // This not needed here but just to highlight to be stored in the global state manager
   const router = useRouter();
+  const { currentUser, storeUser } = useAuth();
 
   const [state, formAction, signInLoading] = useActionState(
     handleSignInSubmit,
@@ -32,16 +34,18 @@ export default function Page() {
   );
 
   // const submitSignIn = handleSignInSubmit.bind(null);
-  console.log(state, signInLoading);
+  // console.log(state, signInLoading);
 
   if (!state.error.error && !signInLoading && state.currentUser !== null) {
     // In the global state used in context or redux store it
     console.log("Logged in successfully");
     //If I setCurrentUser directly here I would be in an infinite loop - so what to do I will update the parent state and directly redirect to /
     // setCurrentUser({ ...state.currentUser }); //and also cannot redirect while it set a state
-    // router.push("/");
+    storeUser(state.currentUser);
+
+    router.push("/");
   }
-  console.log(currentUser);
+  // console.log(currentUser);
 
   return (
     <div className="flex flex-col py-14 items-center gap-5 w-full md:min-w-96 mx-auto md:w-fit">
