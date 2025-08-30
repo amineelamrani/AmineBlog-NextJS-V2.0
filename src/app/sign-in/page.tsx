@@ -43,7 +43,9 @@ export default function Page() {
     // setCurrentUser({ ...state.currentUser }); //and also cannot redirect while it set a state
     storeUser(state.currentUser);
 
-    router.push("/");
+    setTimeout(() => {
+      router.push("/");
+    }, 100); // 100ms delay, adjust as needed
   }
   // console.log(currentUser);
 

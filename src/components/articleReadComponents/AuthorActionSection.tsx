@@ -2,7 +2,6 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import CopySvgComponent from "./CopySvgComponent";
-// import { useTheme } from "@/context/ThemeContext";
 import { useTheme } from "next-themes";
 
 export default function AuthorActionSection() {
