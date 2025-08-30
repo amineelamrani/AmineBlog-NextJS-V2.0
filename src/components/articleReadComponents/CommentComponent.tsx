@@ -4,7 +4,7 @@ import {
   differenceInHours,
   differenceInMonths,
 } from "date-fns";
-import Image from "next/image";
+import CommentLikeImage from "./CommentLikeImage";
 
 export default function CommentComponent({ comment }) {
   const creationDate = new Date(comment.createdAt);
@@ -57,13 +57,7 @@ export default function CommentComponent({ comment }) {
           {comment.content}
         </p>
         <div className="flex items-center gap-1">
-          <Image
-            src="/likeSVGs/like-border-white.svg"
-            alt=""
-            className="w-4 md:w-8 hover:scale-110 hover:cursor-pointer"
-            width={8}
-            height={8}
-          />
+          <CommentLikeImage />
 
           <p className="text-sm md:text-base">{comment.likedBy.length} like</p>
         </div>

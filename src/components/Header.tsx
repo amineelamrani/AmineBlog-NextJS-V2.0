@@ -1,31 +1,14 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import React from "react";
 import Link from "next/link";
 import ThemeSwitch from "./ThemeSwitch";
+import HomeIcon from "./HomeIcon";
 
 export default function Header() {
-  const [theme, setTheme] = useState<string>("light");
-
-  const handleThemeSwap = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTheme(e.target.checked ? "dark" : "light");
-  };
-
-  useEffect(() => {
-    localStorage.setItem("BlogTheme", theme);
-  }, [theme]);
-
   return (
     <div className="flex justify-between items-center py-3 w-full">
       <Link href="/">
         <div className="flex gap-1 items-center">
-          <Image
-            src={theme === "light" ? "/AppLogo-white.svg" : "/AppLogo-dark.svg"}
-            alt="icon-blog"
-            width={8}
-            height={8}
-            className="w-8"
-          />
+          <HomeIcon />
           <h1 className="text-xs md:text-base hidden sm:flex">
             Amine&apos;s Co
             <samp className="font-bold italic">de Chronicles</samp>
@@ -40,7 +23,7 @@ export default function Header() {
       </div>
 
       <div className="flex gap-2 items-center">
-        <ThemeSwitch theme={theme} handleThemeSwap={handleThemeSwap} />
+        <ThemeSwitch />
         <Link href="/sign-in">
           <button className="btn btn-sm px-5 text-xs md:text-base">
             Log in

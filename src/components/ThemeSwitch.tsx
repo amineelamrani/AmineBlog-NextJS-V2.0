@@ -1,10 +1,20 @@
-export default function ThemeSwitch({
-  theme,
-  handleThemeSwap,
-}: {
-  theme: string;
-  handleThemeSwap: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}) {
+"use client";
+import React, { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+
+export default function ThemeSwitch() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  const handleThemeSwap = () => setTheme(theme === "light" ? "dark" : "light");
+
   return (
     <label className="swap swap-rotate pt-1">
       {/* this hidden checkbox controls the state */}

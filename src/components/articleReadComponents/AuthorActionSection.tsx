@@ -2,10 +2,13 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import CopySvgComponent from "./CopySvgComponent";
+// import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "next-themes";
 
 export default function AuthorActionSection() {
   // const theme = localStorage.getItem("BlogTheme"); //to add a global state later for theme switching
-  const theme = "dark";
+  // const theme = "dark";
+  const { theme } = useTheme();
 
   const handleCopyText = async (e) => {
     try {
