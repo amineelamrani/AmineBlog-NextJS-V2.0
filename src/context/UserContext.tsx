@@ -34,11 +34,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const json = localStorage.getItem("AmineBlogV2");
     if (json) {
       const user = JSON.parse(json);
-      setCurrentUser({ ...user });
+      if (user.name && user.email && user.profilePicture) {
+        setCurrentUser({ ...user });
+      } else {
+        if (currentUser !== null) {
+          setCurrentUser(null);
+        }
+      }
     }
   }, []);
-
-  console.log(currentUser);
 
   return (
     <AuthContext.Provider value={{ currentUser, storeUser }}>

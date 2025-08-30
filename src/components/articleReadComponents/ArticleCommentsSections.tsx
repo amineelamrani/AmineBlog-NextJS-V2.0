@@ -3,6 +3,7 @@ import Comment from "@/models/Comment";
 import Link from "next/link";
 import React from "react";
 import CommentComponent from "./CommentComponent";
+import AddCommentSection from "./AddCommentSection";
 
 export default async function ArticleCommentsSections({ articleId }) {
   //fetch comments related to that article and display them
@@ -16,12 +17,8 @@ export default async function ArticleCommentsSections({ articleId }) {
       id="article-comments-section"
       className="flex flex-col gap-5 w-full lg:px-14 py-5"
     >
-      <h1 className="text-info">
-        You must be logged in to comment.{" "}
-        <Link href="/sign-in" className="text-accent">
-          Login
-        </Link>
-      </h1>
+      <AddCommentSection articleId={articleId} />
+
       {queryArticleComments && (
         <>
           <div className="flex gap-2 items-center">
