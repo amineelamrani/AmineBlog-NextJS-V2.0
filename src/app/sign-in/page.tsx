@@ -60,7 +60,7 @@ export default function Page() {
           Eleva
         </p>
         <form className="w-full flex flex-col gap-3" action={formAction}>
-          <label className="input input-bordered flex items-center gap-2 w-full">
+          <label className="input input-bordzered flex items-center gap-2 w-full">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"

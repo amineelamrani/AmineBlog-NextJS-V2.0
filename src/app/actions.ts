@@ -1,9 +1,11 @@
 "use server";
 
 import dbConnect from "@/lib/dbConnect";
+import Comment from "@/models/Comment";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 export interface SignInInterface {
@@ -106,4 +108,72 @@ export async function handleSignUpSubmit(formData: FormData) {
 
   // do the same logic as we have in handleSubmit MERN project ==> When the conditions are met then we create the new user and we redirect him to /account-confirmation/${inputData.email}
   console.log("form submitted with Form data : ", rawFormData);
+}
+
+export async function handleAddComment(initialState, formData: FormData) {
+  const comment = formData.get("comment");
+  const articleId = formData.get("articleId");
+  if (articleId !== initialState.articleId) {
+    return {
+      ...initialState,
+      status: "fail",
+      message: "Cannot proceed with your request",
+    };
+  }
+  const userID = await getCurrentUser();
+  if (!userID) {
+    return {
+      ...initialState,
+      status: "fail",
+      message: "You are not allowed to comment! for Auth users only",
+    };
+  }
+
+  if (!comment || comment.trim() === "") {
+    return {
+      ...initialState,
+      status: "fail",
+      message: "Bro wtf provide a comment don't send it empty!!!",
+    };
+  }
+
+  const commentingUser = await User.findById(userID);
+  const addCommentQuery = await Comment.create({
+    content: comment.trim(),
+    articleId,
+    owner: userID,
+    ownerName: commentingUser.name,
+    ownerPicture: commentingUser.profilePicture,
+  });
+
+  if (!addCommentQuery) {
+    return {
+      ...initialState,
+      status: "fail",
+      message: "Cannot add the comment",
+    };
+  }
+  revalidateTag("comments");
+
+  return {
+    ...initialState,
+    status: "success",
+    message: "commment added successfully",
+  };
+}
+
+export async function getCurrentUser() {
+  const tokenCookies = await cookies();
+  const token = tokenCookies.get("amineBlogv2")!.value;
+  const id = jwt.verify(token, process.env.SECRET_JWT_KEY).id;
+  const checkUser = await User.findById(id);
+  if (
+    checkUser &&
+    checkUser.name &&
+    checkUser.name !== "" &&
+    checkUser.isValid
+  ) {
+    return id;
+  }
+  return null;
 }
