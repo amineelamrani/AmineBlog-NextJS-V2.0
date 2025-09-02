@@ -220,3 +220,19 @@ export async function checkArticleUserLikeStatus(articleId) {
 export async function revalidateLikingNumber() {
   revalidateTag("likesNumber");
 }
+
+export async function addCommentLike(commentID) {
+  const id = await getCurrentUser();
+  if (!id) {
+    return false;
+  }
+  const commentConcerned = await Comment.findById(commentID);
+  if (commentConcerned.likedBy.includes(id)) return false;
+  commentConcerned.likedBy.push(id);
+  await commentConcerned.save();
+  return true;
+}
+
+export async function revalidateComments() {
+  revalidateTag("comments");
+}

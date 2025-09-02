@@ -18,9 +18,6 @@ const getComments = unstable_cache(
 export default async function ArticleCommentsSections({ articleId }) {
   //fetch comments related to that article and display them
   await dbConnect();
-  // const queryArticleComments = await Comment.find({ articleId })
-  //   .populate("owner", "name profilePicture")
-  //   .sort("-createdAt");
 
   const queryArticleComments = await getComments(articleId); //useed unstable cache for this request in order to revalidate them when comment added succesfully
 
