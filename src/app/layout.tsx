@@ -38,16 +38,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
-        <div className=" container mx-auto px-10">
-          <Providers>
+        <Providers>
+          <div className=" container mx-auto px-10">
             <ThemeProvider>
               <Header />
               {children}
             </ThemeProvider>
-          </Providers>
-        </div>
+          </div>
 
-        <Footer />
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
