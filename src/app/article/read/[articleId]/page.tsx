@@ -7,6 +7,7 @@ import Markdown from "react-markdown";
 import ArticleAuthorSection from "@/components/articleReadComponents/ArticleAuthorSection";
 import ArticleCommentsSections from "@/components/articleReadComponents/ArticleCommentsSections";
 import RecentArticlesSection from "@/components/articleReadComponents/RecentArticlesSection";
+import { unstable_cache } from "next/cache";
 
 // interface Articles {
 //   _id: string;
@@ -25,6 +26,14 @@ import RecentArticlesSection from "@/components/articleReadComponents/RecentArti
 //   updatedAt: string;
 // }
 
+const getLikingPeople = unstable_cache(
+  async (articleId) => {
+    return await Article.findById(articleId, "timesLiked");
+  },
+  ["likesNumber"],
+  { tags: ["likesNumber"] }
+);
+
 export default async function page({
   params,
 }: {
@@ -41,6 +50,8 @@ export default async function page({
   const articleData = await Article.findById(articleId)
     .populate("author", "name profilePicture")
     .exec();
+
+  const likedNumber = await getLikingPeople(articleId);
 
   return (
     <div className="container">
@@ -85,7 +96,7 @@ export default async function page({
             />
             <div className="absolute left-6 -bottom-7">
               <h1 className={`font-bold text-base md:text-xl`}>
-                👋 Liked by {articleData.timesLiked} person
+                👋 Liked By {likedNumber?.timesLiked} Person
                 {articleData.timesLiked > 1 && "s"}
               </h1>
             </div>

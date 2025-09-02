@@ -1,6 +1,7 @@
 "use server";
 
 import dbConnect from "@/lib/dbConnect";
+import Article from "@/models/Article";
 import Comment from "@/models/Comment";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
@@ -176,4 +177,46 @@ export async function getCurrentUser() {
     return id;
   }
   return null;
+}
+
+export async function handleLikingArticle(articleId) {
+  const id = await getCurrentUser();
+  console.log("Liking received in the server side");
+  if (!id) {
+    return false;
+  }
+
+  const likingUser = await User.findById(id);
+  if (likingUser.likedArticles.includes(articleId)) return false;
+  const likedArticle = await Article.findById(articleId);
+  likingUser.likedArticles.push(articleId);
+  likedArticle.timesLiked++;
+  if (!likingUser.confirmPassword) {
+    likingUser.confirmPassword = likingUser.password;
+  }
+  await likingUser.save();
+  await likedArticle.save();
+
+  return true;
+}
+
+export async function checkArticleUserLikeStatus(articleId) {
+  const id = await getCurrentUser();
+  if (!id) {
+    return false;
+  }
+  const userConcerned = await User.findById(id);
+  if (!userConcerned) {
+    return false;
+  }
+
+  if (!userConcerned.likedArticles.includes(articleId)) {
+    return false;
+  }
+
+  return true;
+}
+
+export async function revalidateLikingNumber() {
+  revalidateTag("likesNumber");
 }

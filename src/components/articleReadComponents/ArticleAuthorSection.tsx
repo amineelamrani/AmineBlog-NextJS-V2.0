@@ -22,7 +22,7 @@ export default function ArticleAuthorSection({ articleId, author }) {
             </ul>
           </div>
           <div className="flex gap-4 items-center">
-            <AuthorActionSection />
+            <AuthorActionSection articleId={articleId} />
           </div>
         </div>
       )}
