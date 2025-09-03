@@ -4,6 +4,7 @@ import dbConnect from "@/lib/dbConnect";
 import Article from "@/models/Article";
 import Comment from "@/models/Comment";
 import User from "@/models/User";
+import { transporter } from "@/utils/email";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { revalidateTag } from "next/cache";
@@ -19,6 +20,14 @@ export interface SignInInterface {
     name: string;
     profilePicture: string;
   };
+}
+
+export interface SignUpInterface {
+  error: {
+    error: boolean;
+    message: string;
+  };
+  userMail: null | string;
 }
 
 interface formDataInterface {
@@ -99,13 +108,62 @@ export async function handleSignInSubmit(
   };
 }
 
-export async function handleSignUpSubmit(formData: FormData) {
+export async function handleSignUpSubmit(
+  initialState: SignUpInterface,
+  formData: FormData
+) {
   const rawFormData = {
     name: formData.get("name"),
     email: formData.get("email"),
     password: formData.get("password"),
     confirmPassword: formData.get("confirmPassword"),
   };
+
+  if (
+    !rawFormData.email ||
+    !rawFormData.password ||
+    !rawFormData.confirmPassword ||
+    !rawFormData.name
+  ) {
+    return {
+      error: {
+        error: true,
+        message: "Please provide All Requested Fields",
+      },
+      userMail: null,
+    };
+  }
+
+  if (rawFormData.confirmPassword !== rawFormData.password) {
+    return {
+      error: {
+        error: true,
+        message: "Passwords aren't Identical",
+      },
+      userMail: null,
+    };
+  }
+  await dbConnect();
+  const uniqueString = generateRandomString();
+  const newUser = await User.create({
+    name: rawFormData.name,
+    email: rawFormData.email,
+    password: rawFormData.password,
+    confirmPassword: rawFormData.confirmPassword,
+    uniqueString,
+  });
+  // newUser.password = undefined;
+  if (newUser) {
+    //User created successfully but not validated, not to be validated by confirmation mail
+    sendMailConfirmation(rawFormData.email, rawFormData.name, uniqueString);
+    return {
+      error: {
+        error: false,
+        message: "",
+      },
+      userMail: rawFormData.email,
+    };
+  }
 
   // do the same logic as we have in handleSubmit MERN project ==> When the conditions are met then we create the new user and we redirect him to /account-confirmation/${inputData.email}
   console.log("form submitted with Form data : ", rawFormData);
@@ -237,3 +295,29 @@ export async function addCommentLike(commentID) {
 export async function revalidateComments() {
   revalidateTag("comments");
 }
+
+const generateRandomString = () => {
+  const charset =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let password = "";
+  for (let i = 0; i < 12; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset[randomIndex];
+  }
+  return password;
+};
+
+const sendMailConfirmation = async (newUserMail, newUserName, uniqueString) => {
+  const info = await transporter.sendMail({
+    from: `${process.env.NODE_MAIL}`,
+    to: newUserMail, // list of receivers
+    subject: `Welcome ${newUserName}! (Email Adress Confirmation)`, // Subject line
+    text: `unique String ${uniqueString}`, // plain text body
+    html: `<h1>Welcome ${newUserName}</h1>
+      <p>Please visit this link to confirm your account.<br/>Do not share this Link with anyone</p>
+      <p>Your Unique String : </p>
+      <p><samp>${uniqueString}</samp></p>
+    `,
+    // html: "<b>Hello world?</b>", // html body
+  });
+};

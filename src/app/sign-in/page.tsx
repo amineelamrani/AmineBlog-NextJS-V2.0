@@ -33,9 +33,6 @@ export default function Page() {
     initialSignInState
   );
 
-  // const submitSignIn = handleSignInSubmit.bind(null);
-  // console.log(state, signInLoading);
-
   if (!state.error.error && !signInLoading && state.currentUser !== null) {
     // In the global state used in context or redux store it
     console.log("Logged in successfully");

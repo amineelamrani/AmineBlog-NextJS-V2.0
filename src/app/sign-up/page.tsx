@@ -1,22 +1,45 @@
+"use client";
 import OAuth from "@/components/OAuth";
 import Link from "next/link";
-import React from "react";
-import { handleSignUpSubmit } from "../actions";
+import React, { useActionState } from "react";
+import { handleSignUpSubmit, SignUpInterface } from "../actions";
+import { useRouter } from "next/navigation";
+
+const initialSignUpState: SignUpInterface = {
+  error: {
+    error: false,
+    message: "",
+  },
+  userMail: null,
+};
 
 export default function Page() {
   // For Form management I would use the server actions as in the Forms guide
-  const signUpSubmit = handleSignUpSubmit.bind(null);
+  // const signUpSubmit = handleSignUpSubmit.bind(null);
+  const [state, formAction, signUpLoading] = useActionState(
+    handleSignUpSubmit,
+    initialSignUpState
+  );
+  const router = useRouter();
+
+  if (!state.error.error && !signUpLoading && state.userMail !== null) {
+    console.log("Account created successfully");
+    setTimeout(() => {
+      router.push(`/account-confirmation/${state.userMail}`);
+    }, 100); // 100ms delay, adjust as needed
+  }
 
   return (
     <div className="flex flex-col py-14 items-center gap-5 w-full md:min-w-96 mx-auto md:w-fit">
       <div className="flex flex-col items-center gap-3 p-10 border border-neutral">
+        {state.error.error && <WarningComponent text={state.error.message} />}
         <h1 className="text-xl md:text-3xl ">Amine&apos;s Code Chronicles</h1>
         <p className="text-center text-xs md:text-base">
           Unlock the Future of Tech - Dive into Amine&apos;s Code Chronicles and
           <br />
           Eleva
         </p>
-        <form className="w-full flex flex-col gap-3" action={signUpSubmit}>
+        <form className="w-full flex flex-col gap-3" action={formAction}>
           <label className="input input-bordered flex items-center gap-2 w-full">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -95,8 +118,16 @@ export default function Page() {
               required
             />
           </label>
-          <button className="btn btn-primary" type="submit">
-            Create Accoung
+          <button
+            className="btn btn-primary"
+            type="submit"
+            disabled={signUpLoading ? true : false}
+          >
+            {signUpLoading ? (
+              <span className="loading loading-dots loading-xs"></span>
+            ) : (
+              "Create Account"
+            )}
           </button>
         </form>
 
