@@ -11,9 +11,12 @@ export default async function CommentComponent({ comment }) {
   const creationDate = new Date(comment.createdAt);
   const daysDifference = differenceInDays(Date.now(), creationDate);
   const id = await getCurrentUser();
-  const comment_ID: string = comment._id.toJSON();
-  // console.log(comment._id.toJSON());
-
+  let comment_ID: string = "";
+  if (typeof comment._id === "string") {
+    comment_ID = comment._id;
+  } else {
+    comment_ID = comment._id.toJSON();
+  }
   return (
     <div className="flex w-full gap-4 items-start py-5 border-b-2 border-neutral">
       <div className="min-w-10 w-1/12 flex items-start justify-center">
@@ -62,14 +65,11 @@ export default async function CommentComponent({ comment }) {
           {comment.content}
         </p>
         <div className="flex items-center gap-1">
-          {id != null && !comment.likedBy.includes(id) && (
+          {comment && !comment.likedBy.includes(id) && (
             <CommentLikeImage commentID={comment_ID} isIncluded={false} />
           )}
-          {id != null && comment.likedBy.includes(id) && (
+          {id != null && comment && comment.likedBy.includes(id) && (
             <CommentLikeImage commentID={comment_ID} isIncluded={true} />
-          )}
-          {id === null && (
-            <CommentLikeImage commentID={comment_ID} isIncluded={false} />
           )}
 
           <p className="text-sm md:text-base">{comment.likedBy.length} like</p>

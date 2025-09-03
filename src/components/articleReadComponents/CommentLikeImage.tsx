@@ -23,7 +23,6 @@ export default function CommentLikeImage({ isIncluded, commentID }) {
     const addCommLike = await addCommentLike(commentID);
     if (addCommLike) {
       setInclude(true);
-      revalidateComments();
     }
     // revalidateTag for comments
     // setInclude to true

@@ -11,7 +11,15 @@ export default function HomeIcon() {
   }, []);
 
   if (!mounted) {
-    return null;
+    return (
+      <Image
+        src={"/AppLogo-white.svg"}
+        alt="icon-blog"
+        width={8}
+        height={8}
+        className="w-8"
+      />
+    );
   }
   return (
     <>

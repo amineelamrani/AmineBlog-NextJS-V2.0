@@ -230,6 +230,7 @@ export async function addCommentLike(commentID) {
   if (commentConcerned.likedBy.includes(id)) return false;
   commentConcerned.likedBy.push(id);
   await commentConcerned.save();
+  revalidateComments();
   return true;
 }
 
