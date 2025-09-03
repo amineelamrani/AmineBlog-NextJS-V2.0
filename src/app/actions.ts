@@ -296,6 +296,42 @@ export async function revalidateComments() {
   revalidateTag("comments");
 }
 
+export async function verifyAccount(mail, uniqueString) {
+  await dbConnect();
+  const unConfirmedUser = await User.findOne({ email: mail });
+  if (!unConfirmedUser) {
+    console.log("No user with that mail : ", mail);
+    return null;
+  }
+  if (unConfirmedUser.isValid) {
+    console.log("Account already valid : ", mail);
+    return null;
+  }
+
+  if (uniqueString !== unConfirmedUser.uniqueString) {
+    console.log("Does not Match the unique string you give : ", mail);
+    return null;
+  }
+
+  unConfirmedUser.isValid = true;
+  unConfirmedUser.confirmPassword = unConfirmedUser.password;
+  await unConfirmedUser.save();
+  (await cookies()).set({
+    name: "amineBlogv2",
+    value: signToken(unConfirmedUser._id),
+    httpOnly: true,
+    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+  });
+
+  console.log("Account verified : ", mail);
+
+  return {
+    name: unConfirmedUser.name,
+    email: unConfirmedUser.email,
+    profilePicture: unConfirmedUser.profilePicture,
+  };
+}
+
 const generateRandomString = () => {
   const charset =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
