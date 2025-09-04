@@ -40,7 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const json = localStorage.getItem("AmineBlogV2");
     if (json) {
       const user = JSON.parse(json);
-      if (user.name && user.email && user.profilePicture) {
+      if (user !== null && user.name && user.email && user.profilePicture) {
         setCurrentUser({ ...user });
       } else {
         if (currentUser !== null) {

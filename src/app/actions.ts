@@ -358,6 +358,100 @@ export async function deleteUserAccount() {
   return true;
 }
 
+export async function handleForgotPasswordForm(
+  initialState,
+  formData: FormData
+) {
+  const email = formData.get("email");
+  // find user + generate random token + sendResetMail
+  await dbConnect();
+  const user = await User.findOne({ email });
+  if (!user || !user.isValid) {
+    return {
+      error: {
+        error: true,
+        message: "User Not Found or not confirmed",
+      },
+      handled: false,
+      email,
+    };
+  }
+
+  // generate a random String 25
+  const resetToken = generateRandomResetToken();
+  user.passwordResetToken = signToken(resetToken);
+  user.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+  user.confirmPassword = user.password;
+  await user.save();
+
+  sendResetMail(email, resetToken);
+  return {
+    error: {
+      error: false,
+      message: "",
+    },
+    handled: true,
+    email,
+  };
+}
+
+export async function handleResetPasswordForm(
+  initialState,
+  formData: FormData
+) {
+  const email = formData.get("email");
+  const token = formData.get("token");
+  const password = formData.get("password");
+  const confirmPassword = formData.get("confirmPassword");
+
+  await dbConnect();
+  const user = await User.findOne({ email });
+  if (
+    jwt.verify(user.passwordResetToken, process.env.SECRET_JWT_KEY).id === token
+  ) {
+    if (user.passwordResetExpires > Date.now()) {
+      user.password = password;
+      user.confirmPassword = confirmPassword;
+      user.passwordResetToken = undefined;
+      user.passwordResetExpires = undefined;
+      await user.save();
+      (await cookies()).set({
+        name: "amineBlogv2",
+        value: signToken(user._id),
+        httpOnly: true,
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      });
+      return {
+        error: {
+          error: false,
+          message: "",
+        },
+        currentUser: {
+          name: user.name,
+          email: user.email,
+          profilePicture: user.profilePicture,
+        },
+      };
+    } else {
+      return {
+        error: {
+          error: true,
+          message: "Reset token is expired",
+        },
+        currentUser: null,
+      };
+    }
+  }
+
+  return {
+    error: {
+      error: true,
+      message: "You are not allowed to reset the password",
+    },
+    currentUser: null,
+  };
+}
+
 const generateRandomString = () => {
   const charset =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -381,5 +475,29 @@ const sendMailConfirmation = async (newUserMail, newUserName, uniqueString) => {
       <p><samp>${uniqueString}</samp></p>
     `,
     // html: "<b>Hello world?</b>", // html body
+  });
+};
+
+const generateRandomResetToken = () => {
+  const charset =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let password = "";
+  for (let i = 0; i < 25; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset[randomIndex];
+  }
+  return password;
+};
+
+const sendResetMail = async (email, resetToken) => {
+  const info = await transporter.sendMail({
+    from: `${process.env.NODE_MAIL}`,
+    to: email, // list of receivers
+    subject: `Resetting Password `, // Subject line
+    html: `<h1>Hello!</h1>
+      <p>Please visit this link to reset your password.<br/>It is valid for only 1hour! Do not share this Link with anyone!!</p>
+      <p>Here is your reset Token </br>${resetToken}</p>
+      
+    `,
   });
 };

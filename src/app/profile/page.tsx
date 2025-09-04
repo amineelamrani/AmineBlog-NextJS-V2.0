@@ -73,8 +73,8 @@ export default function Page() {
           src={currentUser.profilePicture}
           alt="profile picture"
           className=" w-32 h-32 rounded-full bg-white border-2 p-2"
-          width={32}
-          height={32}
+          width={250}
+          height={250}
         />
       </div>
 
