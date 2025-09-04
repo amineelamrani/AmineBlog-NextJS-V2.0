@@ -26,6 +26,11 @@ export default function Page() {
         storeUser(isVerified);
         setIsLoading(false);
         router.push("/");
+      } else {
+        setError({
+          error: true,
+          message: "Cannot validate your account",
+        });
       }
     }
   };

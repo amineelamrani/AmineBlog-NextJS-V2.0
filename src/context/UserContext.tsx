@@ -17,6 +17,7 @@ type User = {
 type UserContextType = {
   currentUser: User;
   storeUser: (user: User) => void;
+  resetUser: () => void;
 };
 
 const AuthContext = createContext<UserContextType | undefined>(undefined);
@@ -28,6 +29,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // store the user in localStorage and store the user as currentUser
     localStorage.setItem("AmineBlogV2", JSON.stringify(user));
     setCurrentUser(user);
+  };
+
+  const resetUser = () => {
+    localStorage.setItem("AmineBlogV2", JSON.stringify(null));
+    setCurrentUser(null);
   };
 
   useEffect(() => {
@@ -45,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ currentUser, storeUser }}>
+    <AuthContext.Provider value={{ currentUser, storeUser, resetUser }}>
       {children}
     </AuthContext.Provider>
   );

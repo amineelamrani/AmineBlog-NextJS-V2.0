@@ -222,6 +222,7 @@ export async function handleAddComment(initialState, formData: FormData) {
 }
 
 export async function getCurrentUser() {
+  await dbConnect();
   const tokenCookies = await cookies();
   const token = tokenCookies.get("amineBlogv2")!.value;
   const id = jwt.verify(token, process.env.SECRET_JWT_KEY).id;
@@ -330,6 +331,31 @@ export async function verifyAccount(mail, uniqueString) {
     email: unConfirmedUser.email,
     profilePicture: unConfirmedUser.profilePicture,
   };
+}
+
+export async function logOutAccount() {
+  (await cookies()).set({
+    name: "amineBlogv2",
+    value: "loggedout",
+    httpOnly: true,
+    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+  });
+  return true;
+}
+
+export async function deleteUserAccount() {
+  const id = await getCurrentUser();
+  if (!id) {
+    return false;
+  }
+  await User.findByIdAndDelete(id);
+  (await cookies()).set({
+    name: "amineBlogv2",
+    value: "loggedout",
+    httpOnly: true,
+    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+  });
+  return true;
 }
 
 const generateRandomString = () => {
