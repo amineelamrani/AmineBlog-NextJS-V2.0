@@ -452,6 +452,53 @@ export async function handleResetPasswordForm(
   };
 }
 
+export async function handleOAuthCall(email, name, profilePicture) {
+  await dbConnect();
+  const validUser = await User.findOne({ email });
+  if (validUser) {
+    (await cookies()).set({
+      name: "amineBlogv2",
+      value: signToken(validUser._id),
+      httpOnly: true,
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+    return {
+      status: "success",
+      data: {
+        email,
+        name,
+        profilePicture: validUser.profilePicture,
+      },
+    };
+  } else {
+    const password = generateRandomPassword();
+    const confirmPassword = password;
+    const newUser = await User.create({
+      name,
+      email,
+      profilePicture,
+      password,
+      confirmPassword,
+      isValid: true,
+    });
+    (await cookies()).set({
+      name: "amineBlogv2",
+      value: signToken(newUser._id),
+      httpOnly: true,
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+
+    return {
+      status: "success",
+      data: {
+        email,
+        name,
+        profilePicture,
+      },
+    };
+  }
+}
+
 const generateRandomString = () => {
   const charset =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -500,4 +547,15 @@ const sendResetMail = async (email, resetToken) => {
       
     `,
   });
+};
+
+const generateRandomPassword = () => {
+  const charset =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let password = "";
+  for (let i = 0; i < 12; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset[randomIndex];
+  }
+  return password;
 };

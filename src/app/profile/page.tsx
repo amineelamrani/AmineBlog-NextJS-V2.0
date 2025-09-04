@@ -63,6 +63,7 @@ export default function Page() {
         </div>
       )}
       <h1 className="text-2xl">Welcome {currentUser.name}</h1>
+      <h1 className="text-2xl">Email : {currentUser.email}</h1>
       <h1 className="text-4xl font-bold">Profile Page</h1>
       <div
         id="ProfilePicture-Section"
