@@ -224,7 +224,11 @@ export async function handleAddComment(initialState, formData: FormData) {
 export async function getCurrentUser() {
   await dbConnect();
   const tokenCookies = await cookies();
-  const token = tokenCookies.get("amineBlogv2")!.value;
+  const token = tokenCookies.get("amineBlogv2")
+    ? tokenCookies.get("amineBlogv2")?.value
+    : null;
+  if (!token || token === "loggedout") return null;
+
   const id = jwt.verify(token, process.env.SECRET_JWT_KEY).id;
   const checkUser = await User.findById(id);
   if (

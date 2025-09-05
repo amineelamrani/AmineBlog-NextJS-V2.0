@@ -28,7 +28,9 @@ export default function SearchComponent() {
         value={search}
         onKeyUp={(e) => {
           if (e.key === "Enter") {
-            router.push(`/search?searchTerm=${search}`);
+            router.push(
+              `/search?page=1&searchTerm=${search}&category=uncategorized&sort=latest`
+            );
             // navigate(`/search?searchTerm=${search}`);
           }
         }}

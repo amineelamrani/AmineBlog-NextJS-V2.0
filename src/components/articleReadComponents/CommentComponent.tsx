@@ -66,7 +66,11 @@ export default async function CommentComponent({ comment }) {
         </p>
         <div className="flex items-center gap-1">
           {comment && !comment.likedBy.includes(id) && (
-            <CommentLikeImage commentID={comment_ID} isIncluded={false} />
+            <CommentLikeImage
+              commentID={comment_ID}
+              isIncluded={false}
+              userId={id}
+            />
           )}
           {id != null && comment && comment.likedBy.includes(id) && (
             <CommentLikeImage commentID={comment_ID} isIncluded={true} />
