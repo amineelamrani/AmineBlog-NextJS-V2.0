@@ -2,6 +2,7 @@ import SearchPlaceSection from "@/components/SearchPlaceSection";
 import SearchResultDisplay from "@/components/SearchResultDisplay";
 import dbConnect from "@/lib/dbConnect";
 import Article from "@/models/Article";
+import Link from "next/link";
 import React from "react";
 
 export const metadata = {
@@ -44,10 +45,12 @@ export default async function Page({
     queryArticleSearch.sort("createdAt");
   }
 
+  //will limit the number of queries to 7 so if we have 7 then next page would be available if we have less than 7 then it has to be disabled (if we are on a page more than 1 then previous always available)
+
   if (!page || pageInt <= 1) {
-    queryArticleSearch.limit(6);
+    queryArticleSearch.limit(7);
   } else {
-    queryArticleSearch.skip((page - 1) * 6).limit(6);
+    queryArticleSearch.skip((page - 1) * 6).limit(7);
   }
 
   queryArticleSearch = await queryArticleSearch
@@ -61,8 +64,41 @@ export default async function Page({
         category={category}
         sort={sort}
       />
-      <SearchResultDisplay />
+      <SearchResultDisplay articles={queryArticleSearch} />
       {/* <PaginationSection /> Here I would add the pagination handling inside this componenet so it will be a Link  */}
+      <div className="join flex mx-auto mb-6">
+        {pageInt > 1 ? (
+          <Link
+            href={`/search?page=${pageInt - 1}&searchTerm=${
+              searchTerm || ""
+            }&category=${category || "uncategorized"}&sort=${sort || "latest"}`}
+            className="join-item btn"
+          >
+            «
+          </Link>
+        ) : (
+          <button className="join-item btn " disabled>
+            «
+          </button>
+        )}
+        <button className="join-item btn pointer-events-none">
+          Page {pageInt}
+        </button>
+        {queryArticleSearch.length > 6 ? (
+          <Link
+            href={`/search?page=${pageInt + 1}&searchTerm=${
+              searchTerm || ""
+            }&category=${category || "uncategorized"}&sort=${sort || "latest"}`}
+            className="join-item btn"
+          >
+            »
+          </Link>
+        ) : (
+          <button className="join-item btn " disabled>
+            »
+          </button>
+        )}
+      </div>
     </div>
   );
 }
