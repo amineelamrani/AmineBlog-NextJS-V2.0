@@ -9,6 +9,7 @@ import {
   revalidateLikingNumber,
 } from "@/app/actions";
 import { useAuth } from "@/context/UserContext";
+import Link from "next/link";
 // import { revalidateTag } from "next/cache";
 
 export default function AuthorActionSection({ articleId }) {
@@ -50,7 +51,7 @@ export default function AuthorActionSection({ articleId }) {
 
   return (
     <>
-      {!isArticleLiked && (
+      {currentUser && !isArticleLiked && (
         <Image
           src={
             theme === "dark"
@@ -64,7 +65,7 @@ export default function AuthorActionSection({ articleId }) {
           onClick={handleLike}
         />
       )}
-      {isArticleLiked && (
+      {currentUser && isArticleLiked && (
         <Image
           src={
             theme === "dark"
@@ -76,6 +77,39 @@ export default function AuthorActionSection({ articleId }) {
           width={5}
           height={5}
         />
+      )}
+      {!currentUser && (
+        <>
+          <Image
+            src={
+              theme === "dark"
+                ? "/likeSVGs/like-border-white.svg"
+                : "/likeSVGs/like-border-black.svg"
+            }
+            alt=""
+            className="w-5 h-5 md:w-8 md:h-8 hover:scale-105 hover:cursor-pointer"
+            width={5}
+            height={5}
+            onClick={() => document.getElementById("my_modal_1").showModal()}
+          />
+          <dialog id="my_modal_1" className="modal">
+            <div className="modal-box">
+              <h3 className="font-bold text-lg">Not logged in!</h3>
+              <p className="py-4">
+                You need to be logged in, to like the article!
+              </p>
+              <div className="modal-action">
+                <Link href="/sign-in" className="btn">
+                  Sign In
+                </Link>
+                <form method="dialog">
+                  {/* if there is a button in form, it will close the modal */}
+                  <button className="btn">Close</button>
+                </form>
+              </div>
+            </div>
+          </dialog>
+        </>
       )}
       <button className="btn btn-tiny md:btn-base" onClick={handleCopyText}>
         <CopySvgComponent theme={theme} />

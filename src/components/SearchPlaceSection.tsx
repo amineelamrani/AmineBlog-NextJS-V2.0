@@ -47,7 +47,7 @@ export default function SearchPlaceSection({ searchTerm, category, sort }) {
             onChange={(e) => setInputCategoryTerm(e.target.value)}
           >
             <option value="uncategorized">Uncategorized</option>
-            <option value="Testig">testig</option>
+            <option value="Testing">testing</option>
             <option value="Next.js">Next.js</option>
             <option value="React.js">React.js</option>
             <option value="Node.js">Node.js</option>

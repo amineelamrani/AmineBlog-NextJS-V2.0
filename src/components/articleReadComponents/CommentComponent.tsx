@@ -73,7 +73,11 @@ export default async function CommentComponent({ comment }) {
             />
           )}
           {id != null && comment && comment.likedBy.includes(id) && (
-            <CommentLikeImage commentID={comment_ID} isIncluded={true} />
+            <CommentLikeImage
+              userId={id}
+              commentID={comment_ID}
+              isIncluded={true}
+            />
           )}
 
           <p className="text-sm md:text-base">{comment.likedBy.length} like</p>
