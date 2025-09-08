@@ -15,7 +15,11 @@ const getComments = unstable_cache(
   { tags: ["comments"] }
 );
 
-export default async function ArticleCommentsSections({ articleId }) {
+export default async function ArticleCommentsSections({
+  articleId,
+}: {
+  articleId: string;
+}) {
   //fetch comments related to that article and display them
   await dbConnect();
 

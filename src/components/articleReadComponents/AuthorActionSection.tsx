@@ -12,7 +12,11 @@ import { useAuth } from "@/context/UserContext";
 import Link from "next/link";
 // import { revalidateTag } from "next/cache";
 
-export default function AuthorActionSection({ articleId }) {
+export default function AuthorActionSection({
+  articleId,
+}: {
+  articleId: string;
+}) {
   const { theme } = useTheme();
   const { currentUser } = useAuth();
   const [isArticleLiked, setIsArticleLiked] = useState(false);
@@ -28,10 +32,12 @@ export default function AuthorActionSection({ articleId }) {
     checkLiking();
   }, [articleId]);
 
-  const handleCopyText = async (e) => {
+  const handleCopyText = async (e: React.MouseEvent<HTMLButtonElement>) => {
     try {
-      await navigator.clipboard.writeText(e.target.baseURI);
+      const targetElement = e.target as HTMLButtonElement;
+      await navigator.clipboard.writeText(targetElement.baseURI);
     } catch (error) {
+      console.log("Error while trying to Copy the url : ", error);
       return;
     }
   };
@@ -90,7 +96,11 @@ export default function AuthorActionSection({ articleId }) {
             className="w-5 h-5 md:w-8 md:h-8 hover:scale-105 hover:cursor-pointer"
             width={5}
             height={5}
-            onClick={() => document.getElementById("my_modal_1").showModal()}
+            onClick={() =>
+              (
+                document.getElementById("my_modal_1") as HTMLDialogElement
+              ).showModal()
+            }
           />
           <dialog id="my_modal_1" className="modal">
             <div className="modal-box">

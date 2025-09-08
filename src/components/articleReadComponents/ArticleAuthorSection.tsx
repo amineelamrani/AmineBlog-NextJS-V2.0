@@ -1,8 +1,17 @@
 import React from "react";
 import Image from "next/image";
 import AuthorActionSection from "./AuthorActionSection";
+import { Author } from "@/lib/types";
 
-export default function ArticleAuthorSection({ articleId, author }) {
+interface AuthorSectionProps {
+  articleId: string;
+  author: Author;
+}
+
+export default function ArticleAuthorSection({
+  articleId,
+  author,
+}: AuthorSectionProps) {
   // This component will take the articleId and also the author + the current user late to see if he is liked it alreadu
   return (
     <>

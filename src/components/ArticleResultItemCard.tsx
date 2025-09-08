@@ -1,24 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { JSX } from "react";
+import { ArticleTypes } from "@/lib/types";
 
 interface Props {
-  article: {
-    _id: string;
-    image: string;
-    title: string;
-    summary: string;
-    author: {
-      name: string;
-      profilePicture: string;
-      _id: string;
-    };
-    timesLiked: number;
-    createdAt: string;
-    category: string[];
-    readTime: number;
-    updatedAt: string;
-  };
+  article: ArticleTypes;
 }
 
 export default function ArticleResultItemCard({ article }: Props) {

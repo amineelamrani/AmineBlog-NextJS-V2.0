@@ -18,7 +18,6 @@ export async function GET(request: NextRequest) {
     .limit(limit)
     .populate("author", "name profilePicture")
     .exec();
-  console.log({ page, limit });
   if (!queryArticles) {
     return Response.json(
       {

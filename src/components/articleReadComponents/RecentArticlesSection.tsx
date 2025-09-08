@@ -2,15 +2,17 @@ import dbConnect from "@/lib/dbConnect";
 import Article from "@/models/Article";
 import React from "react";
 import ArticleResultItemCard from "../ArticleResultItemCard";
+import { ArticleTypes } from "@/lib/types";
 
 export default async function RecentArticlesSection() {
   await dbConnect();
-  const queryHomeArticles = await Article.find({})
+  const queryHomeArticlesOld = await Article.find({})
     .select("-content")
     .sort("-createdAt")
     .limit(3)
     .populate("author", "name profilePicture")
     .exec();
+  const queryHomeArticles = queryHomeArticlesOld as unknown as ArticleTypes[];
   return (
     <>
       {queryHomeArticles && (

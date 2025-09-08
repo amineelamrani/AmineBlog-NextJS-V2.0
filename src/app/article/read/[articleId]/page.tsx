@@ -8,23 +8,7 @@ import ArticleAuthorSection from "@/components/articleReadComponents/ArticleAuth
 import ArticleCommentsSections from "@/components/articleReadComponents/ArticleCommentsSections";
 import RecentArticlesSection from "@/components/articleReadComponents/RecentArticlesSection";
 import { unstable_cache } from "next/cache";
-
-// interface Articles {
-//   _id: string;
-//   image: string;
-//   title: string;
-//   summary: string;
-//   author: {
-//     name: string;
-//     profilePicture: string;
-//     _id: string;
-//   };
-//   timesLiked: number;
-//   createdAt: string;
-//   category: string[];
-//   readTime: number;
-//   updatedAt: string;
-// }
+import { ArticleTypes } from "@/lib/types";
 
 const getLikingPeople = unstable_cache(
   async (articleId) => {
@@ -47,9 +31,11 @@ export default async function page({
     "badge-accent",
   ];
   await dbConnect();
-  const articleData = await Article.findById(articleId)
+  const articleDataOld = await Article.findById(articleId)
     .populate("author", "name profilePicture")
     .exec();
+
+  const articleData = articleDataOld as unknown as ArticleTypes;
 
   const likedNumber = await getLikingPeople(articleId);
 

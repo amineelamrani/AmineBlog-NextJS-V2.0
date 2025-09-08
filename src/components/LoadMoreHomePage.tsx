@@ -1,30 +1,14 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import ArticleResultItemCard from "./ArticleResultItemCard";
-
-interface Articles {
-  _id: string;
-  image: string;
-  title: string;
-  summary: string;
-  author: {
-    name: string;
-    profilePicture: string;
-    _id: string;
-  };
-  timesLiked: number;
-  createdAt: string;
-  category: string[];
-  readTime: number;
-  updatedAt: string;
-}
+import { ArticleTypes } from "@/lib/types";
 
 export default function LoadMoreHomePage() {
-  const [fetchedArticles, setFetchedArticles] = useState<Articles[] | null>(
+  const [fetchedArticles, setFetchedArticles] = useState<ArticleTypes[] | null>(
     null
   );
   const [pageIndex, setPageIndex] = useState<number>(1);
-  const buttonLoadRef = useRef(null);
+  const buttonLoadRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const fetchData = async (page: number, limit: number) => {
@@ -39,19 +23,25 @@ export default function LoadMoreHomePage() {
       if (data && data.status === "success") {
         if (data.result.queryArticles.length < 6) {
           if (fetchedArticles !== null) {
-            let newArr = [...fetchedArticles].concat(data.result.queryArticles);
+            const newArr = [...fetchedArticles].concat(
+              data.result.queryArticles
+            );
             setFetchedArticles(newArr);
-            buttonLoadRef.current.disabled = true;
+            if (buttonLoadRef.current) {
+              buttonLoadRef.current.disabled = true;
+            }
             return;
           } else {
-            let newArr = [...data.result.queryArticles];
+            const newArr = [...data.result.queryArticles];
             setFetchedArticles(newArr);
-            buttonLoadRef.current.disabled = true;
+            if (buttonLoadRef.current) {
+              buttonLoadRef.current.disabled = true;
+            }
             return;
           }
         }
         if (fetchedArticles !== null) {
-          let newArr = [...fetchedArticles].concat(data.result.queryArticles);
+          const newArr = [...fetchedArticles].concat(data.result.queryArticles);
           setFetchedArticles(newArr);
         } else {
           setFetchedArticles(data.result.queryArticles);
@@ -62,6 +52,7 @@ export default function LoadMoreHomePage() {
     if (pageIndex > 1) {
       fetchData(pageIndex, 6);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageIndex]);
 
   const handleClick = () => {
@@ -72,7 +63,7 @@ export default function LoadMoreHomePage() {
     <>
       {fetchedArticles && (
         <div className="w-full flex flex-wrap py-5 items-stretch">
-          {fetchedArticles.map((article: Articles, index: number) => {
+          {fetchedArticles.map((article: ArticleTypes, index: number) => {
             return <ArticleResultItemCard article={article} key={index} />;
           })}
         </div>

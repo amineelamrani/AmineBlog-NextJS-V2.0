@@ -11,10 +11,15 @@ const initialState = {
   articleId: "",
 };
 
-export default function AddCommentSection({ articleId }) {
+export default function AddCommentSection({
+  articleId,
+}: {
+  articleId: string;
+}) {
   const { currentUser } = useAuth();
   const { theme } = useTheme();
   const hiddenButtonRef = useRef<HTMLButtonElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [state, formAction, pending] = useActionState(handleAddComment, {
     ...initialState,
     articleId: articleId,

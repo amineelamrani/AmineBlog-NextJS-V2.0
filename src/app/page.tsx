@@ -4,28 +4,12 @@ import Article from "@/models/Article";
 import SearchComponent from "@/components/SearchComponent";
 import ArticleResultItemCard from "@/components/ArticleResultItemCard";
 import LoadMoreHomePage from "@/components/LoadMoreHomePage";
+import { ArticleTypes } from "@/lib/types";
 
 // so like this we would build our home page for SEO (no need to have an API to call it then do some client work like in the MERN project - so this is what is different in Nextjs)
 
 // Algo decision => First render would be SEO freindly but next when clicking on load more then it won't be anymore SEO but something like react
 // The first items would be rendered from the server and then we would have a client component
-
-interface ArticleTypes {
-  _id: string;
-  image: string;
-  title: string;
-  summary: string;
-  author: {
-    name: string;
-    profilePicture: string;
-    _id: string;
-  };
-  timesLiked: number;
-  createdAt: string;
-  category: string[];
-  readTime: number;
-  updatedAt: string;
-}
 
 export default async function Home() {
   // const search = await searchParams;
