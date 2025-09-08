@@ -1,5 +1,4 @@
 import "@/models/index";
-import Link from "next/link";
 import dbConnect from "@/lib/dbConnect";
 import Article from "@/models/Article";
 import SearchComponent from "@/components/SearchComponent";
@@ -11,8 +10,21 @@ import LoadMoreHomePage from "@/components/LoadMoreHomePage";
 // Algo decision => First render would be SEO freindly but next when clicking on load more then it won't be anymore SEO but something like react
 // The first items would be rendered from the server and then we would have a client component
 
-interface Props {
-  searchParams?: { page?: string };
+interface ArticleTypes {
+  _id: string;
+  image: string;
+  title: string;
+  summary: string;
+  author: {
+    name: string;
+    profilePicture: string;
+    _id: string;
+  };
+  timesLiked: number;
+  createdAt: string;
+  category: string[];
+  readTime: number;
+  updatedAt: string;
 }
 
 export default async function Home() {
@@ -20,13 +32,14 @@ export default async function Home() {
   // const page = parseInt(search?.page || "1");
   const page = 1;
   await dbConnect();
-  const queryHomeArticles = await Article.find({})
+  const queryHomeArticles1 = await Article.find({})
     .select("-content")
     .sort("-createdAt")
     .skip((page - 1) * 6)
     .limit(6)
     .populate("author", "name profilePicture")
     .exec();
+  const queryHomeArticles = queryHomeArticles1 as unknown as ArticleTypes[];
 
   return (
     <>
@@ -51,7 +64,7 @@ export default async function Home() {
               id="articles-display-section"
               className="w-full flex flex-wrap py-5 items-stretch"
             >
-              {queryHomeArticles.map((article, index) => {
+              {queryHomeArticles.map((article: ArticleTypes, index: number) => {
                 return <ArticleResultItemCard article={article} key={index} />;
               })}
             </div>

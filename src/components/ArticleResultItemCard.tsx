@@ -1,25 +1,28 @@
 import Link from "next/link";
 import Image from "next/image";
+import { JSX } from "react";
 
 interface Props {
-  _id: string;
-  image: string;
-  title: string;
-  summary: string;
-  author: {
-    name: string;
-    profilePicture: string;
+  article: {
     _id: string;
+    image: string;
+    title: string;
+    summary: string;
+    author: {
+      name: string;
+      profilePicture: string;
+      _id: string;
+    };
+    timesLiked: number;
+    createdAt: string;
+    category: string[];
+    readTime: number;
+    updatedAt: string;
   };
-  timesLiked: number;
-  createdAt: string;
-  category: string[];
-  readTime: number;
-  updatedAt: string;
 }
 
 export default function ArticleResultItemCard({ article }: Props) {
-  let categories = <></>;
+  let categories: (JSX.Element | undefined)[] = [];
 
   if (article) {
     categories = article.category.map((item: string, index: number) => {
