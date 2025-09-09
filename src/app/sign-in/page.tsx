@@ -2,16 +2,10 @@
 import OAuth from "@/components/OAuth";
 import WarningComponent from "@/components/WarningComponent";
 import Link from "next/link";
-import React, { useActionState, useState } from "react";
+import React, { useActionState } from "react";
 import { handleSignInSubmit, SignInInterface } from "../actions";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/UserContext";
-
-interface User {
-  email: string;
-  name: string;
-  profilePicture: string;
-}
 
 const initialSignInState: SignInInterface = {
   error: {
@@ -24,9 +18,8 @@ const initialSignInState: SignInInterface = {
 export default function Page() {
   //Manage global states only currentUser & theme ()
   // const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [theme, setTheme] = useState("black"); // This not needed here but just to highlight to be stored in the global state manager
   const router = useRouter();
-  const { currentUser, storeUser } = useAuth();
+  const { storeUser } = useAuth();
 
   const [state, formAction, signInLoading] = useActionState(
     handleSignInSubmit,

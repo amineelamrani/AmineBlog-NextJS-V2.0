@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useActionState } from "react";
 import { handleSignUpSubmit, SignUpInterface } from "../actions";
 import { useRouter } from "next/navigation";
+import WarningComponent from "@/components/WarningComponent";
 
 const initialSignUpState: SignUpInterface = {
   error: {
