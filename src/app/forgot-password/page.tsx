@@ -1,7 +1,7 @@
 "use client";
 import WarningComponent from "@/components/WarningComponent";
 import Link from "next/link";
-import React, { useActionState, useState } from "react";
+import React, { useActionState } from "react";
 import { handleForgotPasswordForm } from "../actions";
 import { useAuth } from "@/context/UserContext";
 import { useRouter } from "next/navigation";

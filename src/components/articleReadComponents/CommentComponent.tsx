@@ -6,17 +6,19 @@ import {
 } from "date-fns";
 import CommentLikeImage from "./CommentLikeImage";
 import { getCurrentUser } from "@/app/actions";
+import { CommentTypes } from "@/lib/types";
 
-export default async function CommentComponent({ comment }) {
+interface propsComment {
+  comment: CommentTypes;
+}
+
+export default async function CommentComponent({ comment }: propsComment) {
   const creationDate = new Date(comment.createdAt);
   const daysDifference = differenceInDays(Date.now(), creationDate);
   const id = await getCurrentUser();
   let comment_ID: string = "";
-  if (typeof comment._id === "string") {
-    comment_ID = comment._id;
-  } else {
-    comment_ID = comment._id.toJSON();
-  }
+  comment_ID = comment._id.toString();
+
   return (
     <div className="flex w-full gap-4 items-start py-5 border-b-2 border-neutral">
       <div className="min-w-10 w-1/12 flex items-start justify-center">

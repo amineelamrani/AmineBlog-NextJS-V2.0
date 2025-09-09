@@ -8,8 +8,21 @@ export async function GET(request: NextRequest) {
   await dbConnect();
 
   const searchParams = request.nextUrl.searchParams;
-  const page = searchParams.get("page") * 1 || 1;
-  const limit = searchParams.get("limit") * 1 || 6;
+  let page = 1;
+  let limit = 6;
+  if (searchParams.get("page")) {
+    const pageExtracted = Number(searchParams.get("page"));
+    if (pageExtracted) {
+      page = pageExtracted;
+    }
+  }
+  if (searchParams.get("limit")) {
+    const limitExtracted = Number(searchParams.get("limit"));
+    if (limitExtracted) {
+      limit = limitExtracted;
+    }
+  }
+  console.log("page : ", page, " | limit : ", limit);
 
   const queryArticles = await Article.find({})
     .select("-content")

@@ -1,13 +1,24 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTheme } from "next-themes";
-import { addCommentLike, revalidateComments } from "@/app/actions";
+import { addCommentLike } from "@/app/actions";
 import Link from "next/link";
 
-export default function CommentLikeImage({ isIncluded, commentID, userId }) {
+interface LikeImageProps {
+  isIncluded: boolean;
+  commentID: string;
+  userId: string;
+}
+
+export default function CommentLikeImage({
+  isIncluded,
+  commentID,
+  userId,
+}: LikeImageProps) {
   //   const theme = "dark";
   const [mounted, setMounted] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [include, setInclude] = useState(isIncluded);
   const { theme } = useTheme();
 
@@ -78,9 +89,11 @@ export default function CommentLikeImage({ isIncluded, commentID, userId }) {
             width={8}
             height={8}
             onClick={() =>
-              document
-                .getElementById(`my_modal_comment_${commentID}`)
-                .showModal()
+              (
+                document.getElementById(
+                  `my_modal_comment_${commentID}`
+                ) as HTMLDialogElement
+              ).showModal()
             }
           />
           <dialog id={`my_modal_comment_${commentID}`} className="modal">
@@ -111,9 +124,11 @@ export default function CommentLikeImage({ isIncluded, commentID, userId }) {
             width={8}
             height={8}
             onClick={() =>
-              document
-                .getElementById(`my_modal_comment_${commentID}`)
-                .showModal()
+              (
+                document.getElementById(
+                  `my_modal_comment_${commentID}`
+                ) as HTMLDialogElement
+              ).showModal()
             }
           />
           <dialog id={`my_modal_comment_${commentID}`} className="modal">

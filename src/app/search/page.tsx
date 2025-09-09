@@ -1,6 +1,7 @@
 import SearchPlaceSection from "@/components/SearchPlaceSection";
 import SearchResultDisplay from "@/components/SearchResultDisplay";
 import dbConnect from "@/lib/dbConnect";
+import { ArticleTypes } from "@/lib/types";
 import Article from "@/models/Article";
 import Link from "next/link";
 import React from "react";
@@ -28,6 +29,7 @@ export default async function Page({
   const pageInt = parseInt(page || "1", 10);
 
   let queryArticleSearch = "";
+  // let queryArticleSearch : ArticleTypes[] = "";
   await dbConnect();
   if (!searchTerm || searchTerm.length === 0) {
     queryArticleSearch = Article.find({});

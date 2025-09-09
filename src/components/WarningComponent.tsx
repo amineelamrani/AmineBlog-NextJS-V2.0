@@ -1,5 +1,4 @@
 export default function WarningComponent({
-  // eslint-disable-next-line react/prop-types
   text = "Warning: Invalid email address!",
 }) {
   return (

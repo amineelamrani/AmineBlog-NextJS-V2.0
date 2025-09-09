@@ -7,6 +7,7 @@ import { deleteUserAccount, logOutAccount } from "../actions";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState({ error: false, message: "" });
   const { currentUser, resetUser } = useAuth();
   const router = useRouter();

@@ -13,7 +13,7 @@ export default function Page() {
   const { storeUser } = useAuth();
   const router = useRouter();
 
-  const handleKeyDown = async (e) => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && inputData !== "" && inputData.length > 2) {
       setIsLoading(true);
       e.preventDefault();

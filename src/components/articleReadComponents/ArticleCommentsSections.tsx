@@ -4,6 +4,7 @@ import React from "react";
 import CommentComponent from "./CommentComponent";
 import AddCommentSection from "./AddCommentSection";
 import { unstable_cache } from "next/cache";
+import { CommentTypes } from "@/lib/types";
 
 const getComments = unstable_cache(
   async (articleId) => {
@@ -23,8 +24,9 @@ export default async function ArticleCommentsSections({
   //fetch comments related to that article and display them
   await dbConnect();
 
-  const queryArticleComments = await getComments(articleId); //useed unstable cache for this request in order to revalidate them when comment added succesfully
-
+  const queryArticleCommentsold = await getComments(articleId); //useed unstable cache for this request in order to revalidate them when comment added succesfully
+  const queryArticleComments =
+    queryArticleCommentsold as unknown as CommentTypes[];
   return (
     <div
       id="article-comments-section"
@@ -40,11 +42,8 @@ export default async function ArticleCommentsSections({
           </div>
 
           <div className="lg:px-10">
-            {queryArticleComments.map((element, index) => (
-              <CommentComponent
-                comment={element}
-                key={`${element._id}-${index}`}
-              />
+            {queryArticleComments.map((element: CommentTypes) => (
+              <CommentComponent comment={element} key={`${element._id}`} />
             ))}
           </div>
         </>

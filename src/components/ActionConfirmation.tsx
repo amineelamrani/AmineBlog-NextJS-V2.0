@@ -1,11 +1,24 @@
-// eslint-disable-next-line react/prop-types
-export default function ActionConfirmation({ handleClick, action }) {
+import React from "react";
+
+interface ActionProps {
+  handleClick: React.MouseEventHandler<HTMLButtonElement>;
+  action: string;
+}
+
+export default function ActionConfirmation({
+  handleClick,
+  action,
+}: ActionProps) {
   return (
     <>
       {/* You can open the modal using document.getElementById('ID').showModal() method */}
       <button
         className="text-red-500 hover:font-bold"
-        onClick={() => document.getElementById(`modal_${action}`).showModal()}
+        onClick={() =>
+          (
+            document.getElementById(`modal_${action}`) as HTMLDialogElement
+          ).showModal()
+        }
       >
         {action}
       </button>

@@ -19,9 +19,12 @@ export interface Author {
 }
 
 export interface CommentTypes {
-  comment: string;
+  content: string;
   articleId: string;
-  owner: string;
+  owner: {
+    name: string;
+    profilePicture: string;
+  };
   ownerName: string;
   ownerPicture: string;
   likedBy: string[];
