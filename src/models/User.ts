@@ -32,8 +32,7 @@ const userSchema = new mongoose.Schema<Users>(
     },
     profilePicture: {
       type: String,
-      default:
-        "https://img.icons8.com/?size=100&id=Ib9FADThtmSf&format=png&color=000000",
+      default: "/defaultLogo.png",
     },
     admin: {
       type: Boolean,
