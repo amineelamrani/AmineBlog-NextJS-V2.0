@@ -155,7 +155,11 @@ export async function handleSignUpSubmit(
   // newUser.password = undefined;
   if (newUser) {
     //User created successfully but not validated, not to be validated by confirmation mail
-    sendMailConfirmation(rawFormData.email, rawFormData.name, uniqueString);
+    await sendMailConfirmation(
+      rawFormData.email,
+      rawFormData.name,
+      uniqueString
+    );
     return {
       error: {
         error: false,
@@ -388,7 +392,7 @@ export async function handleForgotPasswordForm(
   user.confirmPassword = user.password;
   await user.save();
 
-  sendResetMail(email, resetToken);
+  await sendResetMail(email, resetToken);
   return {
     error: {
       error: false,
